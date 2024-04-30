@@ -12,7 +12,7 @@ module.exports = function(config) {
 
     reporters: ['progress', 'kjhtml', 'coverage'],
     coverageReporter: {
-      dir: require('path').join(__dirname, 'coverage'), // Répertoire de sortie pour les rapports de couverture
+      dir: require('path').join(__dirname, 'coverage'),
       subdir: '.',
       reporters: [
         { type: 'lcovonly', subdir: '.' },
