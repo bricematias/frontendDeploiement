@@ -11,7 +11,14 @@ module.exports = function(config) {
     browsers: ['ChromeHeadless'], // Utilisation de Chrome en mode headless pour les tests.
 
     reporters: ['progress', 'kjhtml', 'coverage'],
-
+    coverageReporter: {
+      dir: require('path').join(__dirname, 'coverage'), // Répertoire de sortie pour les rapports de couverture
+      subdir: '.',
+      reporters: [
+        { type: 'lcovonly', subdir: '.' },
+        { type: 'text-summary' }
+      ]
+    },
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
