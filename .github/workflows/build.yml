@@ -7,33 +7,36 @@ on:
 
 jobs:
   build:
-    name: Build
+    name: Build and Analyze
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
-      - name: Install Angular CLI
-        run: npm install -g @angular/cli
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests and coverage headless
-        run: npm run test:ci
+      - name: Run tests with coverage
+        run: npm run test
         continue-on-error: true
 
       - name: SonarQube analysis
         uses: sonarsource/sonarqube-scan-action@master
+        with:
+          args: -Dsonar.javascript.lcov.reportPaths=/coverage/angular-17-crud/lcov.info
+
+
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        with:
-          args: >
-            -Dsonar.javascript.lcov.reportPaths=/coverage/angular-17-crud/lcov.info
-      # If you wish to fail your job when the Quality Gate is red, uncomment the
-      # following lines. This would typically be used to fail a deployment.
+
+      # Uncomment below lines if you want to enforce Quality Gate status check
       # - uses: sonarsource/sonarqube-quality-gate-action@master
       #   timeout-minutes: 5
       #   env:
